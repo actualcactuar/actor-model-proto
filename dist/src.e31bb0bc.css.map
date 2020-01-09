@@ -1,1 +1,0 @@
-{"version":3,"sources":["style.scss"],"names":[],"mappings":"AAAA;EACI;;;AAGJ;EACI;EACA;;;AAGJ;EACI;EACA;EACA","file":"src.e31bb0bc.css","sourceRoot":"../src","sourcesContent":["html{\n    font-size:16px;\n}\n\nbody{\n    margin:0;\n    font: 400 1rem helvetica,sans-serif;\n}\n\n.toolbar {\n    padding: 1rem 2rem;\n    background-color: #00a97a;\n    color: #fff;\n}"]}
