@@ -1,16 +1,16 @@
-console.log('worker');
+import 'babel-polyfill';
+import { workerMessageHandler } from './lib/workerMessageHandler';
 
-const handlePing = data => `Here we are: ${data.token}`;
+const handlePing = data => `Handling ping: ${data}`;
+
+const handlePong = data =>
+  new Promise((resolve, reject) => {
+    setTimeout(() => resolve(`Handling pong: ${data}`), 1000);
+  });
 
 const actions = {
   ping: handlePing,
+  pong: handlePong,
 };
 
-self.addEventListener('message', event => {
-  const { data } = event;
-  const { token, payload, action } = data;
-  if (action in actions) {
-    const result = actions[action].call(this, payload);
-    postMessage({ token, result });
-  }
-});
+workerMessageHandler({ actions, self });

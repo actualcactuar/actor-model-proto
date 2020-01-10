@@ -1,14 +1,20 @@
 import './style.scss';
 import 'babel-polyfill';
 
-import { generateToken } from './lib/utils';
 import { AsyncWorker } from './lib/asyncWorker';
 
-const worker = new AsyncWorker('worker.js', { module: true });
+const worker = new AsyncWorker('worker.js');
 
-document.querySelector('#btn').addEventListener('click', e => {
+document.querySelector('#ping').addEventListener('click', e => {
   worker
-    .post({ action: 'ping', payload: { token: generateToken() } })
+    .post({ action: 'pinfoog', payload: '[PING]' })
+    .then(result => console.log(result, 'resolved'))
+    .catch(e => console.log(e));
+});
+
+document.querySelector('#pong').addEventListener('click', e => {
+  worker
+    .post({ action: 'pong', payload: '[PONG]' })
     .then(result => console.log(result, 'resolved'))
     .catch(e => console.log(e));
 });
