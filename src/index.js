@@ -8,7 +8,7 @@ const worker = new AsyncWorker('worker.js', { module: true });
 
 document.querySelector('#btn').addEventListener('click', e => {
   worker
-    .post({ data: generateToken(), timeout: Math.round(Math.random() * 1000) })
-    .then(({ data }) => console.log(data, 'resolved'))
+    .post({ action: 'ping', payload: { token: generateToken() } })
+    .then(result => console.log(result, 'resolved'))
     .catch(e => console.log(e));
 });
