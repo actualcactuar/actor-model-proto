@@ -5,7 +5,7 @@ export class AsyncWorker {
     this.worker = new Worker(workerPath, { module: true });
   }
 
-  async post(params) {
+  post(params) {
     return new Promise((resolve, reject) => {
       const token = generateToken();
       this.worker.postMessage({ token, ...params });
