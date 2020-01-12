@@ -7,28 +7,22 @@
   </head>
   <body>
     <div id="toolbar">
-      Actor-model-proto<span class="spacer"></span
-      ><button id="menu-toggle" class="btn">Menu</button>
+      Actor-model-proto
     </div>
-    <div id="drawer">
-      <nav class="navigation">
-        <ul class="navigation--main">
-          <li><a href="#">Home</a></li>
-          <li><a href="#profile">Profile</a></li>
-        </ul>
-      </nav>
 
-      <span class="spacer"></span>
-      <nav class="navigation">
-        <ul class="navigation--sub">
-          <li><a href="#">Home</a></li>
-          <li><a href="#profile">Profile</a></li>
-        </ul>
-      </nav>
+    <div id="views">
+      <div id="home" class="view">Home view</div>
+      <div id="profile" class="view">Profile view</div>
+      <div id="settings" class="view">Settings view</div>
+      <div id="notfound" class="view">Not found view</div>
     </div>
-    Hello world! foo bar
-    <button id="ping">ping</button>
-    <button id="pong">pong</button>
+
+    <nav id="tabs">
+      <a view-link href="#home">Home</a>
+      <a view-link href="#profile">Profile</a>
+      <a view-link href="#settings">Settings</a>
+    </nav>
+
     <script src="index.js"></script>
   </body>
 </html>

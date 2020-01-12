@@ -1,0 +1,18 @@
+#tabs {
+  height: $tabs-height;
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 2rem;
+  box-sizing: border-box;
+  align-items: center;
+  background-color: $text-color-dark;
+
+  a {
+    text-decoration: none;
+    color: $text-color-light;
+    &.active {
+      color: $color-primary;
+    }
+  }
+}

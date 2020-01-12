@@ -4,22 +4,47 @@ import 'babel-polyfill';
 import { AsyncWorker } from './lib/asyncWorker';
 
 const worker = new AsyncWorker('worker.js');
-const drawer = document.querySelector('#drawer');
 
-document.querySelector('#ping').addEventListener('click', e => {
-  worker
-    .post({ action: 'ping', payload: '[PING]' })
-    .then(result => console.log(result, 'resolved'))
-    .catch(e => console.log(e));
-});
+const views = document.querySelector('#views');
+const tabs = document.querySelector('#tabs');
+const notfoundView = views.querySelector('#notfound');
 
-document.querySelector('#pong').addEventListener('click', e => {
-  worker
-    .post({ action: 'pong', payload: '[PONG]' })
-    .then(result => console.log(result, 'resolved'))
-    .catch(e => console.log(e));
-});
+const handleHashChange = async () => {
+  const {
+    location: { hash },
+  } = window;
+  const activeView = views.querySelector('.active');
+  if (activeView) {
+    activeView.classList.remove('active');
+  }
+  const activeLink = tabs.querySelector('.active');
+  if (activeLink) {
+    activeLink.classList.remove('active');
+  }
 
-document
-  .querySelector('#menu-toggle')
-  .addEventListener('click', () => drawer.classList.toggle('active'));
+  const view = views.querySelector(hash);
+  const link = tabs.querySelector(`[href="${hash}"]`);
+  if (link) {
+    link.classList.add('active');
+  }
+
+  console.log(views.scrollWidth);
+  if (view) {
+    view.classList.add('active');
+  } else {
+    notfoundView.classList.add('active');
+  }
+};
+
+window.addEventListener('hashchange', handleHashChange);
+
+const init = async () => {
+  const { location } = window;
+  if (!location.hash) {
+    location.hash = '#home';
+  } else {
+    handleHashChange();
+  }
+};
+
+init();

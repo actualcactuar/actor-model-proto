@@ -1,0 +1,9 @@
+#toolbar {
+  padding: 0.5rem 2rem;
+  background-color: $color-primary;
+  color: $bg-color-light;
+  display: flex;
+  align-items: center;
+  height: $toolbar-height;
+  box-sizing: border-box;
+}
