@@ -23,9 +23,9 @@
       transform: translate(0, 0);
       opacity: 1;
 
-      // & ~ .view {
-      //   transform: translate(100%, 0);
-      // }
+      & ~ .view {
+        transform: translate(100%, 0);
+      }
     }
   }
 }

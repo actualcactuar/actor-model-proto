@@ -9,10 +9,7 @@ const views = document.querySelector('#views');
 const tabs = document.querySelector('#tabs');
 const notfoundView = views.querySelector('#notfound');
 
-const handleHashChange = async () => {
-  const {
-    location: { hash },
-  } = window;
+const handleHashChange = async hash => {
   const activeView = views.querySelector('.active');
   if (activeView) {
     activeView.classList.remove('active');
@@ -28,7 +25,6 @@ const handleHashChange = async () => {
     link.classList.add('active');
   }
 
-  console.log(views.scrollWidth);
   if (view) {
     view.classList.add('active');
   } else {
@@ -36,15 +32,29 @@ const handleHashChange = async () => {
   }
 };
 
-window.addEventListener('hashchange', handleHashChange);
+window.addEventListener('popstate', ({ state }) => {
+  handleHashChange(state);
+});
+
+const setRouterLinks = link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const hash = link.getAttribute('href');
+    history.pushState(hash, null, hash);
+    handleHashChange(hash);
+  });
+};
 
 const init = async () => {
   const { location } = window;
   if (!location.hash) {
-    location.hash = '#home';
+    handleHashChange('#home');
   } else {
-    handleHashChange();
+    handleHashChange(location.hash);
   }
+
+  const links = document.querySelectorAll('a[view-link]');
+  links.forEach(setRouterLinks);
 };
 
 init();
