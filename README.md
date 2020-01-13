@@ -1,6 +1,6 @@
 # actor-model-proto
 
-small project to test out actor-model architecture
+small project to test out actor-model architecture and typical framework elements in native JS, very much WIP
 
 ## AsyncWorker class
 
