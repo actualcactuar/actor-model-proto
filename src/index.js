@@ -5,5 +5,10 @@ import { AsyncWorker } from './lib/asyncWorker';
 import { Router } from './lib/router';
 
 const worker = new AsyncWorker('worker.js');
-const router = new Router();
+const routes = [
+  { path: '/home', identifier: 'home' },
+  { path: '/profile', identifier: 'profile' },
+  { path: '/settings', identifier: 'settings' },
+];
+const router = new Router(routes);
 router.init();

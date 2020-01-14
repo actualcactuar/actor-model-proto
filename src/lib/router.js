@@ -1,15 +1,17 @@
 export class Router {
-  constructor() {
+  constructor(routes) {
+    this.routes = routes;
     this.views = document.querySelector('#views');
     this.links = document.querySelectorAll('a[view-link]');
     this.notfoundView = views.querySelector('#notfound');
 
     window.addEventListener('popstate', ({ state }) => {
-      this.navigate(state);
+      this.render({ identifier: state, path: location.pathname + location.search });
     });
   }
 
-  navigate(viewId) {
+  render({ identifier, path }) {
+    // deactivate currently active views and links
     const activeView = this.views.querySelector('.active');
     if (activeView) {
       activeView.classList.remove('active');
@@ -17,10 +19,12 @@ export class Router {
 
     this.links.forEach(link => link.classList.remove('active'));
 
-    const activeLinks = document.querySelectorAll(`a[view-link][view="${viewId}"]`);
-    activeLinks.forEach(link => link.classList.add('active'));
+    // active currently matching links
+    const linksToActivate = document.querySelectorAll(`a[view-link][href="${path}"]`);
+    linksToActivate.forEach(link => link.classList.add('active'));
 
-    const view = this.views.querySelector(`#${viewId}`);
+    // activate correct view
+    const view = this.views.querySelector(`#${identifier}`);
     if (view) {
       view.classList.add('active');
     } else {
@@ -28,23 +32,35 @@ export class Router {
     }
   }
 
+  navigate(pathToRoute) {
+    const route = this.routes.find(({ path }) => path === pathToRoute);
+    if (route) {
+      const { identifier, path } = route;
+      history.pushState(identifier, null, path);
+      this.render({ identifier, path });
+      return;
+    }
+
+    this.render({ identifier: 'notfound', path: pathToRoute });
+  }
+
   async init() {
     const setRouterLinks = link => {
       link.addEventListener('click', e => {
         e.preventDefault();
         const url = link.getAttribute('href');
-        const viewId = link.getAttribute('view');
-        history.pushState(viewId, null, url);
-        this.navigate(viewId);
+        this.navigate(url);
       });
     };
 
-    const { history } = window;
+    const {
+      history,
+      location: { pathname, search },
+    } = window;
     if (history.state) {
-      this.navigate(history.state);
+      this.render({ path: pathname + search, identifier: history.state });
     } else {
-      history.pushState('home', null, '/home');
-      this.navigate('home');
+      this.navigate('/home');
     }
 
     this.links.forEach(setRouterLinks);
