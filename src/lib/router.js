@@ -11,24 +11,19 @@ export class Router {
     });
   }
 
-  async render({ identifier, path, resolve }) {
+  async render({ identifier, resolve, onRender }) {
     this.outlet.innerHTML = null;
-
-    if (resolve) {
-      const response = await resolve();
-      console.log({ response });
-    }
 
     // activate correct view
     const view = document.querySelector(`#${identifier}`);
+    const clone = view ? view.content.cloneNode(true) : this.notfoundView;
+    this.outlet.appendChild(clone);
 
-    if (view) {
-      const clone = view.content.cloneNode(true);
-      this.outlet.appendChild(clone);
-    } else {
-      this.outlet.appendChild(this.notfoundView);
+    const resolverResponse = resolve ? await resolve() : null;
+
+    if (onRender) {
+      onRender({ resolverResponse, outletRef: this.outlet });
     }
-
     setTimeout(() => this.container.classList.remove('route-loading'), 200);
   }
 
@@ -38,9 +33,9 @@ export class Router {
     this.container.classList.add('route-loading');
     setTimeout(() => {
       if (route) {
-        const { identifier, path, resolve } = route;
+        const { identifier, resolve, onRender } = route;
         history.pushState(identifier, null, fullPath);
-        this.render({ identifier, path, resolve });
+        this.render({ identifier, resolve, onRender });
         return;
       }
 

@@ -11,7 +11,16 @@ const worker = new AsyncWorker('worker.js');
 const routes = [
   { path: '/home', identifier: 'home' },
   { path: '/profile', identifier: 'profile' },
-  { path: '/settings', identifier: 'settings', resolve: wait },
+  {
+    path: '/settings',
+    identifier: 'settings',
+    resolve: wait,
+    onRender: ({ outletRef, resolverResponse }) => {
+      const p = document.createElement('p');
+      p.innerHTML = `Resolved response was: ${resolverResponse}`;
+      outletRef.appendChild(p);
+    },
+  },
 ];
 const router = new Router(routes);
 router.init();
