@@ -1,9 +1,40 @@
-#router-outlet {
+#router-outlet-container {
   display: block;
   width: 100vw;
   // height: calc(100vh - #{$toolbar-height} - #{$tabs-height});
   position: relative;
   overflow: hidden !important;
   flex: 1;
-  padding: 0 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+
+  #loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    opacity: 0;
+    transform: scale(0.75);
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+
+  #router-outlet {
+    opacity: 1;
+    transition: opacity 200ms ease;
+  }
+
+  &.route-loading {
+    #loader {
+      transform: scale(1);
+      opacity: 1;
+    }
+    #router-outlet {
+      opacity: 0;
+    }
+  }
 }

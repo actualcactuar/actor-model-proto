@@ -1,6 +1,7 @@
 export class Router {
   constructor(routes) {
     this.routes = routes;
+    this.container = document.querySelector('#router-outlet-container');
     this.outlet = document.querySelector('#router-outlet');
     this.links = document.querySelectorAll('a[view-link]');
     this.notfoundView = document.querySelector('#notfound').content.cloneNode(true);
@@ -10,13 +11,14 @@ export class Router {
     });
   }
 
-  render({ identifier, path }) {
+  async render({ identifier, path, resolve }) {
     this.outlet.innerHTML = null;
-    this.links.forEach(link => link.classList.remove('active'));
 
-    // active currently matching links
-    const linksToActivate = document.querySelectorAll(`a[view-link][href="${path}"]`);
-    linksToActivate.forEach(link => link.classList.add('active'));
+    if (resolve) {
+      const response = await resolve();
+      console.log({ response });
+    }
+
     // activate correct view
     const view = document.querySelector(`#${identifier}`);
 
@@ -26,39 +28,51 @@ export class Router {
     } else {
       this.outlet.appendChild(this.notfoundView);
     }
+
+    setTimeout(() => this.container.classList.remove('route-loading'), 200);
   }
 
   navigate({ pathname, search }) {
     const route = this.routes.find(({ path }) => path === pathname);
     const fullPath = search ? pathname + search : pathname;
-    if (route) {
-      const { identifier, path } = route;
-      history.pushState(identifier, null, fullPath);
-      this.render({ identifier, path });
-      return;
-    }
+    this.container.classList.add('route-loading');
+    setTimeout(() => {
+      if (route) {
+        const { identifier, path, resolve } = route;
+        history.pushState(identifier, null, fullPath);
+        this.render({ identifier, path, resolve });
+        return;
+      }
 
-    this.render({ identifier: 'notfound', path: fullPath });
+      this.render({ identifier: 'notfound', path: fullPath });
+    }, 200);
   }
 
   async init() {
-    const setRouterLinks = link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        const pathname = link.getAttribute('href');
-        const search = link.getAttribute('search');
-        this.navigate({ pathname, search });
-      });
+    const handleLinkClick = ({ event, link }) => {
+      event.preventDefault();
+
+      const pathname = link.getAttribute('href');
+      const search = link.getAttribute('search');
+
+      this.links.forEach(link => link.classList.remove('active'));
+
+      // active currently matching links
+      const linksToActivate = document.querySelectorAll(`a[view-link][href="${pathname}"]`);
+      linksToActivate.forEach(link => link.classList.add('active'));
+
+      this.navigate({ pathname, search });
     };
+    const setRouterLinks = link =>
+      link.addEventListener('click', event => handleLinkClick({ event, link }));
 
     const {
-      history,
       location: { pathname, search },
     } = window;
-    if (pathname) {
+    if (pathname && pathname !== '/') {
       this.navigate({ pathname, search });
     } else {
-      this.navigate({ pathname: '/home' });
+      this.navigate({ pathname: '/home', search });
     }
 
     this.links.forEach(setRouterLinks);
