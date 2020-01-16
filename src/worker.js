@@ -1,5 +1,5 @@
 import 'babel-polyfill';
-import { workerMessageHandler } from './lib/workerMessageHandler';
+import { workerMessageHandler } from './lib/asyncWorker';
 
 const handlePing = data => `Handling ping: ${data}`;
 

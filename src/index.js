@@ -4,6 +4,8 @@ import 'babel-polyfill';
 import { AsyncWorker } from './lib/asyncWorker';
 import { Router } from './lib/router';
 
+console.log('init');
+
 const worker = new AsyncWorker('worker.js');
 const routes = [
   { path: '/home', identifier: 'home' },
