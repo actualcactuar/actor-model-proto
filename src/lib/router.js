@@ -1,4 +1,4 @@
-export const defineRouterLink = navigate => {
+const defineRouterLink = navigate => {
   class RouterLink extends HTMLElement {
     constructor() {
       super();
@@ -33,10 +33,10 @@ export const createRouter = routes => {
     const view = document.querySelector(`#${identifier}`);
     const clone = view ? view.content.cloneNode(true) : notfoundView;
 
-    const resolverResponse = resolve ? await resolve() : null;
+    const result = resolve ? await resolve() : null;
 
     if (onRender) {
-      onRender({ resolverResponse, routeFragment: clone });
+      onRender({ result, fragment: clone });
     }
 
     outlet.innerHTML = null;
@@ -73,5 +73,5 @@ export const createRouter = routes => {
     render({ identifier: state, path: location.pathname + location.search });
   });
   defineRouterLink(navigate);
-  return { navigate };
+  return navigate;
 };

@@ -1,18 +1,13 @@
-import { createRouter, defineRouterLink } from './lib/router';
-import { wait } from './lib/utils';
+import { createRouter } from './lib/router';
 
+import { home, settings } from './routes';
 const routes = [
-  { path: '/home', identifier: 'home' },
+  { path: '/home', identifier: 'home', ...home },
   { path: '/profile', identifier: 'profile' },
   {
     path: '/settings',
     identifier: 'settings',
-    resolve: wait,
-    onRender: ({ routeFragment, resolverResponse }) => {
-      const p = document.createElement('p');
-      p.innerHTML = `Resolved response was: ${resolverResponse}`;
-      routeFragment.appendChild(p);
-    },
+    ...settings,
   },
 ];
-export const { navigate } = createRouter(routes);
+export const navigate = createRouter(routes);

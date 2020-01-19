@@ -5,8 +5,6 @@
   position: relative;
   overflow: hidden !important;
   flex: 1;
-  padding: 1rem;
-  box-sizing: border-box;
 
   #loader {
     position: absolute;
@@ -26,6 +24,14 @@
   #router-outlet {
     opacity: 1;
     transition: opacity 200ms ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    box-sizing: border-box;
+    overflow: auto;
   }
 
   &.route-loading {
