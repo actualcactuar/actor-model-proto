@@ -1,55 +1,3 @@
-export const createRouter = routes => {
-  const container = document.querySelector('#router-outlet-container');
-  const outlet = document.querySelector('#router-outlet');
-  const notfoundView = document.querySelector('#notfound').content.cloneNode(true);
-
-  const render = async ({ identifier, resolve, onRender }) => {
-    outlet.innerHTML = null;
-
-    // activate correct view
-    const view = document.querySelector(`#${identifier}`);
-    const clone = view ? view.content.cloneNode(true) : notfoundView;
-    outlet.appendChild(clone);
-
-    const resolverResponse = resolve ? await resolve() : null;
-
-    if (onRender) {
-      onRender({ resolverResponse, outletRef: outlet });
-    }
-    container.classList.remove('route-loading');
-  };
-
-  const navigate = ({ pathname, search }) => {
-    const route = routes.find(({ path }) => path === pathname);
-    const fullPath = search ? pathname + search : pathname;
-    container.classList.add('route-loading');
-
-    if (route) {
-      const { identifier, resolve, onRender } = route;
-      history.pushState(identifier, null, fullPath);
-      render({ identifier, resolve, onRender });
-      return;
-    }
-
-    render({ identifier: 'notfound', path: fullPath });
-  };
-
-  const {
-    location: { pathname, search },
-  } = window;
-  if (pathname && pathname !== '/') {
-    navigate({ pathname, search });
-  } else {
-    navigate({ pathname: '/home', search });
-  }
-
-  window.addEventListener('popstate', ({ state }) => {
-    render({ identifier: state, path: location.pathname + location.search });
-  });
-
-  return { navigate };
-};
-
 export const defineRouterLink = navigate => {
   class RouterLink extends HTMLElement {
     constructor() {
@@ -73,4 +21,57 @@ export const defineRouterLink = navigate => {
   }
 
   customElements.define('router-link', RouterLink);
+};
+
+export const createRouter = routes => {
+  const container = document.querySelector('#router-outlet-container');
+  const outlet = document.querySelector('#router-outlet');
+  const notfoundView = document.querySelector('#notfound').content.cloneNode(true);
+
+  const render = async ({ identifier, resolve, onRender }) => {
+    // activate correct view
+    const view = document.querySelector(`#${identifier}`);
+    const clone = view ? view.content.cloneNode(true) : notfoundView;
+
+    const resolverResponse = resolve ? await resolve() : null;
+
+    if (onRender) {
+      onRender({ resolverResponse, routeFragment: clone });
+    }
+
+    outlet.innerHTML = null;
+    outlet.appendChild(clone);
+    container.classList.remove('route-loading');
+  };
+
+  const navigate = ({ pathname, search }) => {
+    const route = routes.find(({ path }) => path === pathname);
+    const fullPath = search ? pathname + search : pathname;
+    container.classList.add('route-loading');
+
+    if (route) {
+      const { identifier, resolve, onRender } = route;
+      history.pushState(identifier, null, fullPath);
+      render({ identifier, resolve, onRender });
+      return;
+    }
+
+    history.pushState('notfound', null, fullPath);
+    render({ identifier: 'notfound', path: fullPath });
+  };
+
+  const {
+    location: { pathname, search },
+  } = window;
+  if (pathname && pathname !== '/') {
+    navigate({ pathname, search });
+  } else {
+    navigate({ pathname: '/home', search });
+  }
+
+  window.addEventListener('popstate', ({ state }) => {
+    render({ identifier: state, path: location.pathname + location.search });
+  });
+  defineRouterLink(navigate);
+  return { navigate };
 };
