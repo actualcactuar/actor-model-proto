@@ -2,7 +2,7 @@ import './style.scss';
 import 'babel-polyfill';
 
 import { AsyncWorker } from './lib/asyncWorker';
-import { Router } from './lib/router';
+import { createRouter, defineRouterLink } from './lib/router';
 import { wait } from './lib/utils';
 
 console.log('init');
@@ -22,5 +22,5 @@ const routes = [
     },
   },
 ];
-const router = new Router(routes);
-router.init();
+const { navigate } = createRouter(routes);
+defineRouterLink(navigate);

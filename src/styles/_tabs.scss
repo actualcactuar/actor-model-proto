@@ -7,7 +7,7 @@
   align-items: stretch;
   background-color: $text-color-dark;
 
-  a {
+  router-link {
     text-decoration: none;
     color: $text-color-light;
     flex: 1;
