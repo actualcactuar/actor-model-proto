@@ -1,13 +1,12 @@
 import { createRouter } from './lib/router';
+import { home, settings, profile, notFoundFragment } from './routes';
 
-import { home, settings } from './routes';
 const routes = [
-  { path: '/home', identifier: 'home', ...home },
-  { path: '/profile', identifier: 'profile' },
+  { path: '/home', ...home },
+  { path: '/profile', ...profile },
   {
     path: '/settings',
-    identifier: 'settings',
     ...settings,
   },
 ];
-export const navigate = createRouter(routes);
+export const navigate = createRouter(routes, { notFoundFragment });

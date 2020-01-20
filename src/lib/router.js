@@ -23,55 +23,57 @@ const defineRouterLink = navigate => {
   customElements.define('router-link', RouterLink);
 };
 
-export const createRouter = routes => {
+export const createFragment = html => {
+  const fragment = document.createElement('template');
+  fragment.innerHTML = html;
+  return fragment.content;
+};
+
+export const createRouter = (routes, { notFoundFragment } = {}) => {
   const container = document.querySelector('#router-outlet-container');
   const outlet = document.querySelector('#router-outlet');
-  const notfoundView = document.querySelector('#notfound').content.cloneNode(true);
+  const notFound = notFoundFragment || createFragment(`<h2>404 - Page not found :c</h2>`);
 
-  const render = async ({ identifier, resolve, onRender }) => {
+  const render = async ({ resolve, onRender, fragment }) => {
     // activate correct view
-    const view = document.querySelector(`#${identifier}`);
-    const clone = view ? view.content.cloneNode(true) : notfoundView;
+    const element = fragment ? fragment() : notfoundView;
 
     const result = resolve ? await resolve() : null;
 
     if (onRender) {
-      onRender({ result, fragment: clone });
+      onRender({ result, fragment: element });
     }
 
     outlet.innerHTML = null;
-    outlet.appendChild(clone);
+    outlet.appendChild(element);
     container.classList.remove('route-loading');
   };
 
-  const navigate = ({ pathname, search }) => {
+  const navigate = ({ pathname, search, skipPush }) => {
     const route = routes.find(({ path }) => path === pathname);
     const fullPath = search ? pathname + search : pathname;
     container.classList.add('route-loading');
 
     if (route) {
-      const { identifier, resolve, onRender } = route;
-      history.pushState(identifier, null, fullPath);
-      render({ identifier, resolve, onRender });
+      if (!skipPush) history.pushState(fullPath, null, fullPath);
+      render(route);
       return;
     }
 
     history.pushState('notfound', null, fullPath);
-    render({ identifier: 'notfound', path: fullPath });
+    render({ fragment: notFound, path: fullPath });
   };
 
   const {
     location: { pathname, search },
   } = window;
   if (pathname && pathname !== '/') {
-    navigate({ pathname, search });
+    navigate({ pathname, search, skipPush: true });
   } else {
     navigate({ pathname: '/home', search });
   }
 
-  window.addEventListener('popstate', ({ state }) => {
-    render({ identifier: state, path: location.pathname + location.search });
-  });
+  window.addEventListener('popstate', ({ state }) => navigate({ pathname: state, skipPush: true }));
   defineRouterLink(navigate);
   return navigate;
 };
