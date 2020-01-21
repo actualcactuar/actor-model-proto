@@ -1,7 +1,7 @@
-import {createFragment} from '../lib/router';
+import { createFragment } from '../lib/router';
 
 export const fragment = () => {
-    const template = createFragment(`<h2 class="title">Profile</h2>
+  const template = createFragment(`<h2 class="title">Profile</h2>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores qui quia ipsa ad
       architecto, magnam eveniet voluptatum tempora animi voluptatibus corporis quod nemo eum
@@ -9,9 +9,9 @@ export const fragment = () => {
     </p>
     `);
 
-    return template
-}
+  return template;
+};
 
 export const onRender = () => {
-    console.log('profile render')
-}
+  console.log('profile render');
+};

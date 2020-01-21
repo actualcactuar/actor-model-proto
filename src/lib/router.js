@@ -29,6 +29,12 @@ export const createFragment = html => {
   return fragment.content;
 };
 
+export const useTemplate = id => {
+  const template = document.getElementById(id);
+  const clone = template.content.cloneNode(true);
+  return clone;
+};
+
 export const createRouter = (routes, { notFoundFragment } = {}) => {
   const container = document.querySelector('#router-outlet-container');
   const outlet = document.querySelector('#router-outlet');
