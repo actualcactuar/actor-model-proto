@@ -1,4 +1,4 @@
-import {createFragment} from '../lib/router';
+import { createFragment } from '../lib/router';
 
 export const resolve = async () => {
   const response = await fetch('https://jsonplaceholder.typicode.com/posts');
@@ -21,7 +21,6 @@ export const onRender = async ({ fragment: route, result }) => {
   });
 
   route.appendChild(fragment);
-  console.log(result);
 };
 
 export const fragment = () => {
@@ -35,5 +34,4 @@ export const fragment = () => {
   `);
 
   return fragment;
-  
-}
+};

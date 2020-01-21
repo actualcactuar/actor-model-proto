@@ -12,6 +12,10 @@ export const fragment = () => {
   return template;
 };
 
-export const onRender = () => {
-  console.log('profile render');
+export const resolve = async params => {
+  console.log('profile resolve', params);
+};
+
+export const onRender = ({ params }) => {
+  console.log('profile render', params);
 };

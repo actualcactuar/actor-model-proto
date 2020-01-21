@@ -1,6 +1,6 @@
 import * as home from './home';
 import * as settings from './settings';
 import * as profile from './profile';
-import * as notFoundFragment from './notFound';
+import * as notFound from './notFound';
 
-export { home, settings, profile, notFoundFragment };
+export { home, settings, profile, notFound };

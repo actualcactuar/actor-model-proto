@@ -36,18 +36,45 @@ export const useTemplate = id => {
 };
 
 export const createRouter = (routes, { notFoundFragment } = {}) => {
+  const buildRouteRegex = route => {
+    const formattedRoute = route.path
+      .split('/')
+      .map(str => {
+        if (str.match(':')) {
+          return '.*';
+        }
+        return str;
+      })
+      .join('/');
+    const regex = new RegExp(`^${formattedRoute}$`, 'i');
+
+    return { ...route, regex };
+  };
+
+  const buildRouteParams = ({ route, pathname }) => {
+    const splitPath = pathname.split('/');
+    const params = {};
+    route.path.split('/').forEach((param, index) => {
+      if (param.match(':')) {
+        params[param.slice(1)] = splitPath[index];
+      }
+    });
+
+    return params;
+  };
+
   const container = document.querySelector('#router-outlet-container');
   const outlet = document.querySelector('#router-outlet');
   const notFound = notFoundFragment || createFragment(`<h2>404 - Page not found :c</h2>`);
-
-  const render = async ({ resolve, onRender, fragment }) => {
+  const formattedRoutes = routes.map(buildRouteRegex);
+  const render = async ({ resolve, onRender, fragment, params = {} }) => {
     // activate correct view
     const element = fragment ? fragment() : notfoundView;
 
-    const result = resolve ? await resolve() : null;
+    const result = resolve ? await resolve(params) : null;
 
     if (onRender) {
-      onRender({ result, fragment: element });
+      onRender({ result, fragment: element, params });
     }
 
     outlet.innerHTML = null;
@@ -56,18 +83,21 @@ export const createRouter = (routes, { notFoundFragment } = {}) => {
   };
 
   const navigate = ({ pathname, search, skipPush }) => {
-    const route = routes.find(({ path }) => path === pathname);
+    const route = formattedRoutes.find(({ regex }) => regex.test(pathname));
+
     const fullPath = search ? pathname + search : pathname;
     container.classList.add('route-loading');
 
     if (route) {
       if (!skipPush) history.pushState(fullPath, null, fullPath);
-      render(route);
+
+      const params = buildRouteParams({ route, pathname });
+      render({ ...route, params });
       return;
     }
 
     history.pushState('notfound', null, fullPath);
-    render({ fragment: notFound, path: fullPath });
+    render({ fragment: () => notFound, path: fullPath });
   };
 
   const {
