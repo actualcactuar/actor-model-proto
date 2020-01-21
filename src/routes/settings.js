@@ -1,15 +1,13 @@
 import { wait } from '../lib/utils';
-import {createFragment} from '../lib/router';
+import { createFragment } from '../lib/router';
 
-
-export const resolve = wait;
+export const resolve = async () => wait(1000);
 
 export const onRender = ({ fragment, result }) => {
   const p = document.createElement('p');
   p.innerHTML = `Resolved response was: ${result}`;
   fragment.appendChild(p);
 };
-
 
 export const fragment = () => {
   const fragment = createFragment(`
@@ -22,5 +20,4 @@ export const fragment = () => {
   `);
 
   return fragment;
-  
-}
+};

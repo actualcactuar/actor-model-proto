@@ -41,13 +41,14 @@ export const createRouter = (routes, { notFoundFragment } = {}) => {
       .split('/')
       .map(str => {
         if (str.match(':')) {
-          return '.*';
+          return '(.[^/])*\\w+';
         }
         return str;
       })
       .join('/');
+      console.log(formattedRoute)
     const regex = new RegExp(`^${formattedRoute}$`, 'i');
-
+    console.log(regex)
     return { ...route, regex };
   };
 

@@ -1,4 +1,5 @@
 import { createFragment } from '../lib/router';
+import { worker } from '../worker-module';
 
 export const fragment = () => {
   const template = createFragment(`<h2 class="title">Profile</h2>
@@ -12,8 +13,10 @@ export const fragment = () => {
   return template;
 };
 
+console.log(worker);
 export const resolve = async params => {
-  console.log('profile resolve', params);
+  const result = await worker.post({ action: 'ping', payload: params });
+  console.log(result);
 };
 
 export const onRender = ({ params }) => {
