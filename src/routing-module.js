@@ -1,8 +1,7 @@
-import { createRouter, useTemplate } from './lib/router';
+import { createRouter } from './lib/router';
 import { home, settings, profile, notFound } from './routes';
 
 const { fragment: notFoundFragment } = notFound;
-const testFragment = () => useTemplate('test');
 
 const routes = [
   { path: '/home', ...home },
@@ -11,10 +10,6 @@ const routes = [
   {
     path: '/settings',
     ...settings,
-  },
-  {
-    path: '/test/:id/:title',
-    fragment: testFragment,
   },
 ];
 export const navigate = createRouter(routes, { notFoundFragment });

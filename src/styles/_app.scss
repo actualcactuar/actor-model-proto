@@ -1,0 +1,10 @@
+#app {
+  flex: 1;
+  display: flex;
+
+  #content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 100%;
+  }
+}
