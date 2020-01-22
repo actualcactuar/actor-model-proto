@@ -41,14 +41,12 @@ export const createRouter = (routes, { notFoundFragment } = {}) => {
       .split('/')
       .map(str => {
         if (str.match(':')) {
-          return '(.[^/])*\\w+';
+          return '(.[^\\/])*\\w+';
         }
         return str;
       })
-      .join('/');
-      console.log(formattedRoute)
-    const regex = new RegExp(`^${formattedRoute}$`, 'i');
-    console.log(regex)
+      .join('\\/');
+    const regex = new RegExp(`^${formattedRoute}$`);
     return { ...route, regex };
   };
 
@@ -112,5 +110,6 @@ export const createRouter = (routes, { notFoundFragment } = {}) => {
 
   window.addEventListener('popstate', ({ state }) => navigate({ pathname: state, skipPush: true }));
   defineRouterLink(navigate);
+  console.log(formattedRoutes)
   return navigate;
 };
