@@ -35,7 +35,7 @@ export const useTemplate = id => {
   return clone;
 };
 
-export const createRouter = (routes, { notFoundFragment } = {}) => {
+export const createRouter = (routes, { notFound } = {}) => {
   const buildRouteRegex = route => {
     const formattedRoute = route.path
       .split('/')
@@ -64,7 +64,10 @@ export const createRouter = (routes, { notFoundFragment } = {}) => {
 
   const container = document.querySelector('#router-outlet-container');
   const outlet = document.querySelector('#router-outlet');
-  const notFound = notFoundFragment || createFragment(`<h2>404 - Page not found :c</h2>`);
+  const notFoundRoute = notFound || {
+    fragment: () => createFragment(`<h2>404 - Page not found :c</h2>`),
+  };
+  console.log(notFoundRoute);
   const formattedRoutes = routes.map(buildRouteRegex);
   const render = async ({ resolve, onRender, fragment, params = {} }) => {
     // activate correct view
@@ -96,7 +99,7 @@ export const createRouter = (routes, { notFoundFragment } = {}) => {
     }
 
     history.pushState('notfound', null, fullPath);
-    render({ fragment: () => notFound, path: fullPath });
+    render({ ...notFoundRoute, path: fullPath });
   };
 
   const {
@@ -110,6 +113,6 @@ export const createRouter = (routes, { notFoundFragment } = {}) => {
 
   window.addEventListener('popstate', ({ state }) => navigate({ pathname: state, skipPush: true }));
   defineRouterLink(navigate);
-  console.log(formattedRoutes)
+  console.log(formattedRoutes);
   return navigate;
 };

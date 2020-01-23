@@ -1,8 +1,6 @@
 import { createRouter } from './lib/router';
 import { home, settings, profile, notFound } from './routes';
 
-const { fragment: notFoundFragment } = notFound;
-
 const routes = [
   { path: '/home', ...home },
   { path: '/profile', ...profile },
@@ -12,4 +10,4 @@ const routes = [
     ...settings,
   },
 ];
-export const navigate = createRouter(routes, { notFoundFragment });
+export const navigate = createRouter(routes, { notFound });
