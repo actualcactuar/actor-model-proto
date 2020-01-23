@@ -15,7 +15,7 @@ export const fragment = () => {
 
 console.log(worker);
 export const resolve = async params => {
-  const result = await worker.post({ action: 'ping', payload: params });
+  const result = await worker.post({ action: 'pong', payload: params });
   console.log(result);
 };
 
