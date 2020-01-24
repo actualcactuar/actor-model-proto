@@ -8,13 +8,6 @@ const defineRouterLink = navigate => {
         const pathname = this.getAttribute('href');
         const search = this.getAttribute('search');
 
-        const links = document.querySelectorAll('router-link');
-        links.forEach(link => link.classList.remove('active'));
-
-        // active currently matching links
-        const linksToActivate = document.querySelectorAll(`router-link[href="${pathname}"]`);
-        linksToActivate.forEach(link => link.classList.add('active'));
-
         navigate({ pathname, search });
       });
     }
@@ -36,6 +29,10 @@ export const useTemplate = id => {
 };
 
 export const createRouter = (routes, { notFound } = {}) => {
+  const routerState = {
+    isNavigating: false,
+  };
+
   const buildRouteRegex = route => {
     const formattedRoute = route.path
       .split('/')
@@ -62,6 +59,15 @@ export const createRouter = (routes, { notFound } = {}) => {
     return params;
   };
 
+  const setLinksActive = ({ pathname }) => {
+    const links = document.querySelectorAll('router-link');
+    links.forEach(link => link.classList.remove('active'));
+
+    // active currently matching links
+    const linksToActivate = document.querySelectorAll(`router-link[href="${pathname}"]`);
+    linksToActivate.forEach(link => link.classList.add('active'));
+  };
+
   const container = document.querySelector('#router-outlet-container');
   const outlet = document.querySelector('#router-outlet');
   const notFoundRoute = notFound || {
@@ -84,22 +90,25 @@ export const createRouter = (routes, { notFound } = {}) => {
     container.classList.remove('route-loading');
   };
 
-  const navigate = ({ pathname, search, skipPush }) => {
+  const navigate = async ({ pathname, search, skipPush }) => {
     const route = formattedRoutes.find(({ regex }) => regex.test(pathname));
 
     const fullPath = search ? pathname + search : pathname;
     container.classList.add('route-loading');
 
     if (route) {
+      const params = buildRouteParams({ route, pathname });
+      setLinksActive({ pathname });
+      render({ ...route, params });
       if (!skipPush) history.pushState(fullPath, null, fullPath);
 
-      const params = buildRouteParams({ route, pathname });
-      render({ ...route, params });
       return;
     }
 
-    history.pushState('notfound', null, fullPath);
     render({ ...notFoundRoute, path: fullPath });
+
+    setLinksActive({ pathname });
+    history.pushState('notfound', null, fullPath);
   };
 
   const {
@@ -110,6 +119,7 @@ export const createRouter = (routes, { notFound } = {}) => {
   } else {
     navigate({ pathname: '/home', search });
   }
+  setLinksActive({ pathname });
 
   window.addEventListener('popstate', ({ state }) => navigate({ pathname: state, skipPush: true }));
   defineRouterLink(navigate);
