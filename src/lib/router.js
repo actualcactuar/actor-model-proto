@@ -28,9 +28,10 @@ export const useTemplate = id => {
   return clone;
 };
 
-export const createRouter = (routes, { notFound } = {}) => {
+export const createRouter = (routes, { notFound, onNavigationStart, onNavigationEnd } = {}) => {
   const routerState = {
     isNavigating: false,
+    currentRoute: null,
   };
 
   const buildRouteRegex = route => {
@@ -68,33 +69,46 @@ export const createRouter = (routes, { notFound } = {}) => {
     linksToActivate.forEach(link => link.classList.add('active'));
   };
 
-  const container = document.querySelector('#router-outlet-container');
   const outlet = document.querySelector('#router-outlet');
   const notFoundRoute = notFound || {
     fragment: () => createFragment(`<h2>404 - Page not found :c</h2>`),
   };
-  console.log(notFoundRoute);
   const formattedRoutes = routes.map(buildRouteRegex);
-  const render = async ({ resolve, onRender, fragment, params = {} }) => {
+  const render = async route => {
+    const { resolve, onRender, fragment, params = {}, regex } = route;
+    routerState.currentRoute = route;
     // activate correct view
-    const element = fragment ? fragment() : notfoundView;
 
     const result = resolve ? await resolve(params) : null;
 
-    if (onRender) {
-      onRender({ result, fragment: element, params });
-    }
+    // once await is complete if user hasn't navigated elsewhere
+    if (regex.test(location.pathname)) {
+      const element = fragment ? fragment() : notfoundView;
 
-    outlet.innerHTML = null;
-    outlet.appendChild(element);
-    container.classList.remove('route-loading');
+      if (onRender) {
+        onRender({ result, fragment: element, params, outlet });
+      }
+
+      outlet.innerHTML = null;
+      outlet.appendChild(element);
+      routerState.isNavigating = false;
+
+      if (onNavigationEnd) {
+        onNavigationEnd({ ...routerState, outlet });
+      }
+    }
   };
 
   const navigate = async ({ pathname, search, skipPush }) => {
+    routerState.isNavigating = true;
+
+    if (onNavigationStart) {
+      onNavigationStart({ ...routerState, outlet });
+    }
+
     const route = formattedRoutes.find(({ regex }) => regex.test(pathname));
 
     const fullPath = search ? pathname + search : pathname;
-    container.classList.add('route-loading');
 
     if (route) {
       const params = buildRouteParams({ route, pathname });
@@ -123,6 +137,5 @@ export const createRouter = (routes, { notFound } = {}) => {
 
   window.addEventListener('popstate', ({ state }) => navigate({ pathname: state, skipPush: true }));
   defineRouterLink(navigate);
-  console.log(formattedRoutes);
   return navigate;
 };
