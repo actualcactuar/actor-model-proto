@@ -40,3 +40,54 @@ body {
 * {
   box-sizing: border-box;
 }
+
+.toggle-btn {
+  border: 0;
+  outline: 0;
+  font-size: 1rem;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0.5rem;
+  background-color: #f7f7f7;
+  border-radius: 50%;
+  color: $color-primary;
+
+  &:active {
+    background-color: #efefef;
+  }
+
+  .icon-layer {
+    transition: transform 200ms ease, opacity 200ms ease;
+    height: 1.75rem;
+    width: 1.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:last-child {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      transform: translateY(100%);
+      opacity: 0;
+    }
+
+    &:first-child {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  &.active {
+    .icon-layer:first-child {
+      opacity: 0;
+      transform: translateY(-100%);
+    }
+    .icon-layer:last-child {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
