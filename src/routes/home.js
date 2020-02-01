@@ -8,8 +8,12 @@ export const resolve = async () => {
 
 export const onRender = async ({ fragment: route, result }) => {
   const tpl = ({ title, body }) => `
-        <h4>${title}</h4>
-        <p>${body}</p>`;
+  <div class="post-avatar"></div>
+  <div class="post__content">
+    <h4>${title}</h4>
+    <p>${body}</p>
+  </div>
+  `;
 
   const fragment = new DocumentFragment();
   result.forEach(post => {
@@ -25,12 +29,13 @@ export const onRender = async ({ fragment: route, result }) => {
 
 export const fragment = () => {
   const fragment = createFragment(`
-      <h2 class="title">Home</h2>
-      <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis illum minus cum consequuntur
-        dicta obcaecati dolor eum ex, magnam porro! Vitae eum quibusdam at perspiciatis iure porro
-        maiores similique labore!
-      </p>
+    <h2 class="title">Home</h2>
+    <p>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis illum minus cum consequuntur
+      dicta obcaecati dolor eum ex, magnam porro! Vitae eum quibusdam at perspiciatis iure porro
+      maiores similique labore!
+    </p>
+     
   `);
 
   return fragment;
