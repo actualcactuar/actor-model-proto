@@ -8,7 +8,7 @@ export const resolve = async () => {
 
 export const onRender = async ({ fragment: route, result }) => {
   const tpl = ({ title, body }) => `
-  <div class="post-avatar"></div>
+  <div class="post__avatar">${title.split('')[0]}</div>
   <div class="post__content">
     <h4>${title}</h4>
     <p>${body}</p>

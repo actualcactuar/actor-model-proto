@@ -1,3 +1,54 @@
-.post{
-    
+.post {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+  &__avatar {
+    width: 5rem;
+    height: 5rem;
+    background-color: $color-primary;
+    border-radius: 50%;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font: $font-title;
+    text-transform: uppercase;
+    font-size: 2.5rem;
+    color: $text-color-light;
+  }
+  &__content {
+    flex: 1;
+
+    h4 {
+      margin:0;
+      line-height: 2.5rem;
+      font-size: 1.25rem;
+      text-transform: capitalize;
+      font-weight: 300;
+    }
+
+    p{
+        margin: 1rem 0;
+    }
+  }
 }
+
+@media screen and (max-width: $mobile-breakpoint) {
+    .post {
+        flex-direction: column;
+     
+        &__content{
+
+            h4{
+                margin-top:1rem;
+            }
+        }
+    }
+  }
