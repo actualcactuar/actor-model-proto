@@ -75,18 +75,18 @@ export const createRouter = (routes, { notFound, onNavigationStart, onNavigation
   };
   const formattedRoutes = routes.map(buildRouteRegex);
   const render = async route => {
-    const { resolve, onRender, fragment, params = {}, regex } = route;
+    const { resolve = async () => {}, onRender, fragment, params = {}, regex } = route;
     routerState.currentRoute = route;
     // activate correct view
 
-    const result = resolve ? await resolve(params) : null;
+    const result = await resolve(params);
 
     // once await is complete if user hasn't navigated elsewhere
     if (regex.test(location.pathname)) {
       const element = fragment ? fragment() : notfoundView;
 
       if (onRender) {
-        onRender({ result, fragment: element, params, outlet });
+        await onRender({ result, fragment: element, params, outlet });
       }
 
       outlet.innerHTML = null;

@@ -1,7 +1,4 @@
-import { wait } from '../lib/utils';
 import { createFragment } from '../lib/router';
-
-export const resolve = async () => wait(1000);
 
 export const onRender = ({ fragment, result }) => {
   const p = document.createElement('p');
