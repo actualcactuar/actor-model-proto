@@ -12,6 +12,4 @@ export const fragment = () => {
   return template;
 };
 
-export const onRender = ({ params }) => {
-  console.log('profile render', params);
-};
+export const onRender = ({ params }) => {};

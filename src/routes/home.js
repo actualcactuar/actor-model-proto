@@ -1,11 +1,15 @@
 import { createFragment } from '../lib/router';
 
-// export const resolve = async () => {
-//   console.log('resolve');
-// };
+function Component() {}
 
-export const onRender = async ({ fragment: route, result }) => {
-  console.log('render');
+Component.prototype.foo = function() {
+  return 'goo';
+};
+
+export const onRender = async ({ fragment, result, params, outlet }) => {
+  console.log('render', { fragment, result, params, outlet });
+  const test = new Component();
+  console.log(Component.foo);
 };
 
 export const fragment = () => {
@@ -16,7 +20,6 @@ export const fragment = () => {
       dicta obcaecati dolor eum ex, magnam porro! Vitae eum quibusdam at perspiciatis iure porro
       maiores similique labore!
     </p>
-     
   `);
 
   return fragment;
