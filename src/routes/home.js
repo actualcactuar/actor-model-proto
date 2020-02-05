@@ -1,19 +1,11 @@
-import { createFragment } from '../lib/router';
-
-function Component() {}
-
-Component.prototype.foo = function() {
-  return 'goo';
-};
+import { parseFragment, dynamicFragment } from '../lib/component';
 
 export const onRender = async ({ fragment, result, params, outlet }) => {
   console.log('render', { fragment, result, params, outlet });
-  const test = new Component();
-  console.log(Component.foo);
 };
 
 export const fragment = () => {
-  const fragment = createFragment(`
+  const fragment = parseFragment(`
     <h2 class="title">Home</h2>
     <p>
       Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis illum minus cum consequuntur
@@ -21,6 +13,11 @@ export const fragment = () => {
       maiores similique labore!
     </p>
   `);
+
+  const title = 'Fooo';
+  const fn = () => 'baaar';
+  const elem = dynamicFragment`<div>test component</div>`;
+  const fragmentProto = dynamicFragment`<div><p>${title}</p><button>${fn}</button>${elem}</div>`;
 
   return fragment;
 };

@@ -1,7 +1,7 @@
-import { createFragment } from '../lib/router';
+import { parseFragment } from '../lib/component';
 
 export const fragment = () => {
-  const template = createFragment(`<h2 class="title">Profile</h2>
+  const template = parseFragment(`<h2 class="title">Profile</h2>
     <p>
       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores qui quia ipsa ad
       architecto, magnam eveniet voluptatum tempora animi voluptatibus corporis quod nemo eum

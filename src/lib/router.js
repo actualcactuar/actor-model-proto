@@ -16,12 +16,6 @@ const defineRouterLink = navigate => {
   customElements.define('router-link', RouterLink);
 };
 
-export const createFragment = html => {
-  const fragment = document.createElement('template');
-  fragment.innerHTML = html;
-  return fragment.content;
-};
-
 export const useTemplate = id => {
   const template = document.getElementById(id);
   const clone = template.content.cloneNode(true);
@@ -71,7 +65,11 @@ export const createRouter = (routes, { notFound, onNavigationStart, onNavigation
 
   const outlet = document.querySelector('#router-outlet');
   const notFoundRoute = notFound || {
-    fragment: () => createFragment(`<h2>404 - Page not found :c</h2>`),
+    fragment: () => {
+      const h2 = document.createElement('h2');
+      h2.innerText = '404 - Page not found :c';
+      return h2;
+    },
   };
   const formattedRoutes = routes.map(buildRouteRegex);
   const render = async route => {

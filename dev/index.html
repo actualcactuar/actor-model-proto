@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Actor Model Proto</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400|Roboto:300,400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src.e31bb0bc.css"></head>
+  <body>
+    <div id="app">
+      <div id="drawer">
+        <span id="version">v0.0.1-alpha</span>
+        <nav id="drawer__nav">
+          <router-link href="/home">Home</router-link>
+          <router-link href="/posts">Posts</router-link>
+          <router-link href="/profile">Profile</router-link>
+          <router-link href="/settings">Settings</router-link>
+        </nav>
+      </div>
+      <div id="content">
+        <div id="toolbar">
+          Actor-model-proto
+          <button class="toggle-btn" toggle-target="#drawer">
+            <div class="icon-layer">
+              <i class="far fa-ellipsis-v fa-fw fa-lg"></i>
+            </div>
+            <div class="icon-layer">
+              <i class="far fa-times fa-fw"></i>
+            </div>
+          </button>
+        </div>
+        <div id="router-outlet-container">
+          <div id="loader">
+            <svg width="45px" height="45px" viewBox="0 0 300 300">
+              <path fill="red">
+                <animate attributeName="d" dur="1500ms" keyTimes="0;.33;.66;1" calcMode="spline" keySplines="0.91, 0.01, 0.02, 0.99;0.91, 0.01, 0.02, 0.99;0.91, 0.01, 0.02, 0.99" repeatCount="indefinite" values="
+             M299.999 300 C301.835 298.244 301.797 1.781 299.994 0.006 298.431 -1.531 1.866 -1.805 0 0.003 -1.886 1.828 -1.428 298.835 0 300 0.602 300.492 298.004 301.909 299.999 300 Z;
+             M0 300 C1.836 298.246 301.803 301.774 299.999 300 298.437 298.464 151.863 -1.806 149.998 0.002 148.112 1.827 146.983 -2.779 150 0 151.605 1.478 -1.995 301.907 0 300 Z;
+             M0 150.004 C-0.577 231.381 66.536 300.071 149.989 300 227.513 299.934 299.868 240.062 299.999 150.001 300.113 70.657 237.675 -0.34 149.99 0.012 62.709 0.362 0.555 71.706 0 150.004 Z;
+             M0 0.002 C-0.458 0.709 -0.18 299.053 0 300 0.491 302.58 297.48 300.789 299.997 300 301.878 299.411 300.867 1.723 299.997 0.003 299.148 -1.674 0.462 -0.712 0 0.002 Z"></animate>
+
+                <animate attributeName="fill" dur="1500ms" keyTimes="0;.33;.66;1" calcMode="spline" keySplines="0.91, 0.01, 0.02, 0.99;0.91, 0.01, 0.02, 0.99;0.91, 0.01, 0.02, 0.99" repeatCount="indefinite" values="#0082a9;#0082a9;#0082a9;#0082a9;"></animate>
+              </path>
+            </svg>
+          </div>
+          <div id="router-outlet"></div>
+        </div>
+      </div>
+    </div>
+    <script src="https://kit.fontawesome.com/29e0ac0d41.js" crossorigin="anonymous"></script>
+    <script src="/src.e31bb0bc.js"></script>
+  </body>
+</html>

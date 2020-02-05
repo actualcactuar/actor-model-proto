@@ -1,4 +1,4 @@
-import { createFragment } from '../lib/router';
+import { parseFragment } from '../lib/component';
 
 export const onRender = ({ fragment, result }) => {
   const p = document.createElement('p');
@@ -7,7 +7,7 @@ export const onRender = ({ fragment, result }) => {
 };
 
 export const fragment = () => {
-  const fragment = createFragment(`
+  const fragment = parseFragment(`
     <h2 class="title">Settings</h2>
     <p>
       Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus officia aliquid fugit
