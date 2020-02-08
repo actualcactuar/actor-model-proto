@@ -1,4 +1,4 @@
-import { parseFragment } from '../lib/component';
+import { parseFragmentFromString } from '../lib/component';
 
 export const resolve = async () => {
   const response = await fetch('https://jsonplaceholder.typicode.com/posts');
@@ -28,7 +28,7 @@ export const onRender = async ({ fragment: route, result }) => {
 };
 
 export const fragment = () => {
-  const fragment = parseFragment(`
+  const fragment = parseFragmentFromString(`
     <h2 class="title">Posts</h2>   
   `);
 

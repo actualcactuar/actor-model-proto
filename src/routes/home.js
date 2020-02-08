@@ -1,11 +1,11 @@
-import { parseFragment, dynamicFragment } from '../lib/component';
+import { parseFragmentFromString, useTemplateAsFragment } from '../lib/component';
 
 export const onRender = async ({ fragment, result, params, outlet }) => {
   console.log('render', { fragment, result, params, outlet });
 };
 
 export const fragment = () => {
-  const fragment = parseFragment(`
+  const fragment = parseFragmentFromString(`
     <h2 class="title">Home</h2>
     <p>
       Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis illum minus cum consequuntur
@@ -14,10 +14,8 @@ export const fragment = () => {
     </p>
   `);
 
-  const title = 'Fooo';
-  const fn = () => 'baaar';
-  const elem = dynamicFragment`<div>test component</div>`;
-  const fragmentProto = dynamicFragment`<div><p>${title}</p><button>${fn}</button>${elem}</div>`;
+  const foo = useTemplateAsFragment('foo');
+  fragment.appendChild(foo);
 
   return fragment;
 };

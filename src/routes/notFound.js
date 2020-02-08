@@ -1,7 +1,7 @@
-import { parseFragment } from '../lib/component';
+import { parseFragmentFromString } from '../lib/component';
 
 export const fragment = () =>
-  parseFragment(`
+  parseFragmentFromString(`
   <h2 class="title">404 - page not found</h2>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde sit nam odit nesciunt

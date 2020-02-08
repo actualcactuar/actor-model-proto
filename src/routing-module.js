@@ -21,4 +21,5 @@ const onNavigationEnd = state => {
   container.classList.remove('route-loading');
 };
 const routerConfig = { notFound, onNavigationEnd, onNavigationStart };
+
 export const navigate = createRouter(routes, routerConfig);
