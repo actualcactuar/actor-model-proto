@@ -7,12 +7,14 @@ export const resolve = async () => {
 };
 
 export const onRender = async ({ fragment: route, result }) => {
-  const tpl = ({ title, body }) => `
-  <div class="post__avatar">${title.split('')[0]}</div>
-  <div class="post__content">
-    <h4>${title}</h4>
-    <p>${body}</p>
-  </div>
+  const tpl = ({ title, body, id }) => `
+  <router-link href="/posts/${id}">
+    <div class="post__avatar">${title.split('')[0]}</div>
+    <div class="post__content">
+      <h4>${title}</h4>
+      <p>${body}</p>
+    </div>
+  </router-link>
   `;
 
   const fragment = new DocumentFragment();

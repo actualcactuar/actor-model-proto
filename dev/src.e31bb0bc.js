@@ -8337,7 +8337,7 @@ var createRouter = function createRouter(routes) {
     var _ref4 = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee2(route) {
-      var _route$resolve, resolve, onRender, fragment, _route$params, params, regex, result, element;
+      var _route$resolve, resolve, onRender, fragment, _route$params, params, regex, modifyExisting, result, element;
 
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
@@ -8357,7 +8357,7 @@ var createRouter = function createRouter(routes) {
                     }
                   }
                 }, _callee);
-              })) : _route$resolve, onRender = route.onRender, fragment = route.fragment, _route$params = route.params, params = _route$params === void 0 ? {} : _route$params, regex = route.regex;
+              })) : _route$resolve, onRender = route.onRender, fragment = route.fragment, _route$params = route.params, params = _route$params === void 0 ? {} : _route$params, regex = route.regex, modifyExisting = route.modifyExisting;
               routerState.currentRoute = route; // activate correct view
 
               _context2.next = 4;
@@ -8365,20 +8365,21 @@ var createRouter = function createRouter(routes) {
 
             case 4:
               result = _context2.sent;
+              console.log(result, regex); // once await is complete if user hasn't navigated elsewhere
 
               if (!regex.test(location.pathname)) {
-                _context2.next = 14;
+                _context2.next = 15;
                 break;
               }
 
               element = fragment ? fragment() : notfoundView;
 
               if (!onRender) {
-                _context2.next = 10;
+                _context2.next = 11;
                 break;
               }
 
-              _context2.next = 10;
+              _context2.next = 11;
               return onRender({
                 result: result,
                 fragment: element,
@@ -8386,8 +8387,11 @@ var createRouter = function createRouter(routes) {
                 outlet: outlet
               });
 
-            case 10:
-              outlet.innerHTML = null;
+            case 11:
+              if (!modifyExisting) {
+                outlet.innerHTML = null;
+              }
+
               outlet.appendChild(element);
               routerState.isNavigating = false;
 
@@ -8397,7 +8401,7 @@ var createRouter = function createRouter(routes) {
                 }));
               }
 
-            case 14:
+            case 15:
             case "end":
               return _context2.stop();
           }
@@ -8462,8 +8466,9 @@ var createRouter = function createRouter(routes) {
                 pathname: pathname
               });
               history.pushState('notfound', null, fullPath);
+              console.log(formattedRoutes);
 
-            case 14:
+            case 15:
             case "end":
               return _context3.stop();
           }
@@ -8515,60 +8520,26 @@ exports.createRouter = createRouter;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.dynamicFragment = exports.parseFragment = void 0;
+exports.useTemplateAsFragment = exports.parseFragmentFromString = void 0;
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-var parseFragment = function parseFragment(html) {
+var parseFragmentFromString = function parseFragmentFromString(html) {
   return document.createRange().createContextualFragment(html);
 };
 
-exports.parseFragment = parseFragment;
+exports.parseFragmentFromString = parseFragmentFromString;
 
-var dynamicFragment = function dynamicFragment(template) {
-  for (var _len = arguments.length, embeds = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    embeds[_key - 1] = arguments[_key];
+var useTemplateAsFragment = function useTemplateAsFragment(selector) {
+  var template = document.getElementById(selector);
+
+  if (!template || !template.content instanceof DocumentFragment) {
+    throw new Error("No template matching to selector \"".concat(selector, "\" was found!"));
   }
 
-  var parsed = embeds.map(function (embed, index) {
-    if (embed instanceof DocumentFragment) {
-      console.log({
-        embed: embed
-      }, template[index]);
-      return template[index] + embed;
-    }
-
-    if (typeof embed !== 'function' && _typeof(embed) !== 'object') {
-      console.log({
-        embed: embed
-      }, template[index]);
-      return template[index] + embed;
-    }
-
-    if (embed() instanceof DocumentFragment) {
-      console.log({
-        embed: embed
-      }, template[index]);
-      return template[index] + embed();
-    }
-
-    console.log('function returning function', embed);
-    return template[index] + embed();
-  });
-  var parsedTemplateString = [].concat(_toConsumableArray(parsed), [template[template.length - 1]]).join('');
-  console.log(parsedTemplateString);
-  return parseFragment(parsedTemplateString);
+  var clone = template.content.cloneNode(true);
+  return clone;
 };
 
-exports.dynamicFragment = dynamicFragment;
+exports.useTemplateAsFragment = useTemplateAsFragment;
 },{}],"routes/home.js":[function(require,module,exports) {
 "use strict";
 
@@ -8578,28 +8549,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.fragment = exports.onRender = void 0;
 
 var _component = require("../lib/component");
-
-function _templateObject2() {
-  var data = _taggedTemplateLiteral(["<div><p>", "</p><button>", "</button>", "</div>"]);
-
-  _templateObject2 = function _templateObject2() {
-    return data;
-  };
-
-  return data;
-}
-
-function _templateObject() {
-  var data = _taggedTemplateLiteral(["<div>test component</div>"]);
-
-  _templateObject = function _templateObject() {
-    return data;
-  };
-
-  return data;
-}
-
-function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -8640,15 +8589,9 @@ function () {
 exports.onRender = onRender;
 
 var fragment = function fragment() {
-  var fragment = (0, _component.parseFragment)("\n    <h2 class=\"title\">Home</h2>\n    <p>\n      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis illum minus cum consequuntur\n      dicta obcaecati dolor eum ex, magnam porro! Vitae eum quibusdam at perspiciatis iure porro\n      maiores similique labore!\n    </p>\n  ");
-  var title = 'Fooo';
-
-  var fn = function fn() {
-    return 'baaar';
-  };
-
-  var elem = (0, _component.dynamicFragment)(_templateObject());
-  var fragmentProto = (0, _component.dynamicFragment)(_templateObject2(), title, fn, elem);
+  var fragment = (0, _component.parseFragmentFromString)("\n    <h2 class=\"title\">Home</h2>\n    <p>\n      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quis illum minus cum consequuntur\n      dicta obcaecati dolor eum ex, magnam porro! Vitae eum quibusdam at perspiciatis iure porro\n      maiores similique labore!\n    </p>\n  ");
+  var foo = (0, _component.useTemplateAsFragment)('foo');
+  fragment.appendChild(foo);
   return fragment;
 };
 
@@ -8674,7 +8617,7 @@ var onRender = function onRender(_ref) {
 exports.onRender = onRender;
 
 var fragment = function fragment() {
-  var fragment = (0, _component.parseFragment)("\n    <h2 class=\"title\">Settings</h2>\n    <p>\n      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus officia aliquid fugit\n      architecto quibusdam omnis quae quisquam inventore saepe perferendis. Perferendis voluptatem\n      expedita ea blanditiis molestiae fuga, autem exercitationem delectus.\n    </p>\n  ");
+  var fragment = (0, _component.parseFragmentFromString)("\n    <h2 class=\"title\">Settings</h2>\n    <p>\n      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus officia aliquid fugit\n      architecto quibusdam omnis quae quisquam inventore saepe perferendis. Perferendis voluptatem\n      expedita ea blanditiis molestiae fuga, autem exercitationem delectus.\n    </p>\n  ");
   return fragment;
 };
 
@@ -8690,7 +8633,7 @@ exports.onRender = exports.fragment = void 0;
 var _component = require("../lib/component");
 
 var fragment = function fragment() {
-  var template = (0, _component.parseFragment)("<h2 class=\"title\">Profile</h2>\n    <p>\n      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores qui quia ipsa ad\n      architecto, magnam eveniet voluptatum tempora animi voluptatibus corporis quod nemo eum\n      pariatur! Consequatur voluptate dolorem sint impedit.\n    </p>\n    ");
+  var template = (0, _component.parseFragmentFromString)("<h2 class=\"title\">Profile</h2>\n    <p>\n      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores qui quia ipsa ad\n      architecto, magnam eveniet voluptatum tempora animi voluptatibus corporis quod nemo eum\n      pariatur! Consequatur voluptate dolorem sint impedit.\n    </p>\n    ");
   return template;
 };
 
@@ -8712,7 +8655,7 @@ exports.fragment = void 0;
 var _component = require("../lib/component");
 
 var fragment = function fragment() {
-  return (0, _component.parseFragment)("\n  <h2 class=\"title\">404 - page not found</h2>\n      <p>\n        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde sit nam odit nesciunt\n        recusandae libero animi est dolor illo possimus, iure laborum eligendi autem, quas vitae,\n        suscipit ipsam magni commodi!\n      </p>\n  ");
+  return (0, _component.parseFragmentFromString)("\n  <h2 class=\"title\">404 - page not found</h2>\n      <p>\n        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde sit nam odit nesciunt\n        recusandae libero animi est dolor illo possimus, iure laborum eligendi autem, quas vitae,\n        suscipit ipsam magni commodi!\n      </p>\n  ");
 };
 
 exports.fragment = fragment;
@@ -8783,8 +8726,9 @@ function () {
 
             tpl = function tpl(_ref4) {
               var title = _ref4.title,
-                  body = _ref4.body;
-              return "\n  <div class=\"post__avatar\">".concat(title.split('')[0], "</div>\n  <div class=\"post__content\">\n    <h4>").concat(title, "</h4>\n    <p>").concat(body, "</p>\n  </div>\n  ");
+                  body = _ref4.body,
+                  id = _ref4.id;
+              return "\n  <router-link href=\"/posts/".concat(id, "\">\n    <div class=\"post__avatar\">").concat(title.split('')[0], "</div>\n    <div class=\"post__content\">\n      <h4>").concat(title, "</h4>\n      <p>").concat(body, "</p>\n    </div>\n  </router-link>\n  ");
             };
 
             fragment = new DocumentFragment();
@@ -8812,7 +8756,103 @@ function () {
 exports.onRender = onRender;
 
 var fragment = function fragment() {
-  var fragment = (0, _component.parseFragment)("\n    <h2 class=\"title\">Posts</h2>   \n  ");
+  var fragment = (0, _component.parseFragmentFromString)("\n    <h2 class=\"title\">Posts</h2>   \n  ");
+  return fragment;
+};
+
+exports.fragment = fragment;
+},{"../lib/component":"lib/component.js"}],"routes/post.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.fragment = exports.onRender = exports.resolve = void 0;
+
+var _component = require("../lib/component");
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+var resolve =
+/*#__PURE__*/
+function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee(_ref2) {
+    var id, response, json;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            id = _ref2.id;
+            _context.next = 3;
+            return fetch("https://jsonplaceholder.typicode.com/posts/".concat(id));
+
+          case 3:
+            response = _context.sent;
+            _context.next = 6;
+            return response.json();
+
+          case 6:
+            json = _context.sent;
+            return _context.abrupt("return", json);
+
+          case 8:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function resolve(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+exports.resolve = resolve;
+
+var onRender =
+/*#__PURE__*/
+function () {
+  var _ref3 = _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee2(_ref4) {
+    var fragment, result, title, body, str, tpl;
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            fragment = _ref4.fragment, result = _ref4.result;
+            title = result.title, body = result.body;
+
+            str = function str() {
+              return "\n    <div class=\"post__avatar\">".concat(title.split('')[0], "</div>\n    <div class=\"post__content\">\n    <h4>").concat(title, "</h4>\n    <p>").concat(body, "</p>\n    </div>\n    ");
+            };
+
+            tpl = (0, _component.parseFragmentFromString)(str());
+            console.log(result);
+            fragment.querySelector('.modal').appendChild(tpl);
+
+          case 6:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function onRender(_x2) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
+exports.onRender = onRender;
+
+var fragment = function fragment() {
+  var fragment = (0, _component.parseFragmentFromString)("\n    <div class=\"modal\">\n        <div class=\"modal__toolbar\">\n            <router-link href=\"/posts\">back</router-link>\n        </div>\n    </div>\n  ");
   return fragment;
 };
 
@@ -8823,7 +8863,7 @@ exports.fragment = fragment;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.posts = exports.notFound = exports.profile = exports.settings = exports.home = void 0;
+exports.post = exports.posts = exports.notFound = exports.profile = exports.settings = exports.home = void 0;
 
 var home = _interopRequireWildcard(require("./home"));
 
@@ -8845,10 +8885,14 @@ var posts = _interopRequireWildcard(require("./posts"));
 
 exports.posts = posts;
 
+var post = _interopRequireWildcard(require("./post"));
+
+exports.post = post;
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-},{"./home":"routes/home.js","./settings":"routes/settings.js","./profile":"routes/profile.js","./notFound":"routes/notFound.js","./posts":"routes/posts.js"}],"routing-module.js":[function(require,module,exports) {
+},{"./home":"routes/home.js","./settings":"routes/settings.js","./profile":"routes/profile.js","./notFound":"routes/notFound.js","./posts":"routes/posts.js","./post":"routes/post.js"}],"routing-module.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8873,8 +8917,10 @@ var routes = [_objectSpread({
 }, _routes.profile), _objectSpread({
   path: '/posts'
 }, _routes.posts), _objectSpread({
-  path: '/profile/:id'
-}, _routes.posts), _objectSpread({
+  path: '/posts/:id'
+}, _routes.post, {
+  modifyExisting: true
+}), _objectSpread({
   path: '/settings'
 }, _routes.settings)];
 var container = document.querySelector('#router-outlet-container');
@@ -9126,7 +9172,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60310" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63358" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

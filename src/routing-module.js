@@ -1,11 +1,11 @@
 import { createRouter } from './lib/router';
-import { home, settings, profile, notFound, posts } from './routes';
+import { home, settings, profile, notFound, posts, post } from './routes';
 
 const routes = [
   { path: '/home', ...home },
   { path: '/profile', ...profile },
   { path: '/posts', ...posts },
-  { path: '/profile/:id', ...posts },
+  { path: '/posts/:id', ...post, modifyExisting: true },
   {
     path: '/settings',
     ...settings,

@@ -73,12 +73,20 @@ export const createRouter = (routes, { notFound, onNavigationStart, onNavigation
   };
   const formattedRoutes = routes.map(buildRouteRegex);
   const render = async route => {
-    const { resolve = async () => {}, onRender, fragment, params = {}, regex } = route;
+    const {
+      resolve = async () => {},
+      onRender,
+      fragment,
+      params = {},
+      regex,
+      modifyExisting,
+    } = route;
     routerState.currentRoute = route;
     // activate correct view
 
     const result = await resolve(params);
 
+    console.log(result, regex);
     // once await is complete if user hasn't navigated elsewhere
     if (regex.test(location.pathname)) {
       const element = fragment ? fragment() : notfoundView;
@@ -87,7 +95,9 @@ export const createRouter = (routes, { notFound, onNavigationStart, onNavigation
         await onRender({ result, fragment: element, params, outlet });
       }
 
-      outlet.innerHTML = null;
+      if (!modifyExisting) {
+        outlet.innerHTML = null;
+      }
       outlet.appendChild(element);
       routerState.isNavigating = false;
 
@@ -121,6 +131,7 @@ export const createRouter = (routes, { notFound, onNavigationStart, onNavigation
 
     setLinksActive({ pathname });
     history.pushState('notfound', null, fullPath);
+    console.log(formattedRoutes);
   };
 
   const {
