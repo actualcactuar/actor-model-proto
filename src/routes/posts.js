@@ -26,12 +26,14 @@ export const onRender = async ({ fragment: route, result }) => {
     fragment.appendChild(div);
   });
 
-  route.appendChild(fragment);
+  route.querySelector('.posts').appendChild(fragment);
 };
 
 export const fragment = () => {
   const fragment = parseFragmentFromString(`
-    <h2 class="title">Posts</h2>   
+    <div class="posts">
+      <h2 class="title">Posts</h2>
+    </div>
   `);
 
   return fragment;

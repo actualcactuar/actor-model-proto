@@ -86,7 +86,6 @@ export const createRouter = (routes, { notFound, onNavigationStart, onNavigation
 
     const result = await resolve(params);
 
-    console.log(result, regex);
     // once await is complete if user hasn't navigated elsewhere
     if (regex.test(location.pathname)) {
       const element = fragment ? fragment() : notfoundView;
@@ -100,6 +99,7 @@ export const createRouter = (routes, { notFound, onNavigationStart, onNavigation
       }
       outlet.appendChild(element);
       routerState.isNavigating = false;
+      outlet.setAttribute('active-route', location.pathname);
 
       if (onNavigationEnd) {
         onNavigationEnd({ ...routerState, outlet });
@@ -131,7 +131,6 @@ export const createRouter = (routes, { notFound, onNavigationStart, onNavigation
 
     setLinksActive({ pathname });
     history.pushState('notfound', null, fullPath);
-    console.log(formattedRoutes);
   };
 
   const {

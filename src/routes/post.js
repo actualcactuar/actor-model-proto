@@ -19,7 +19,12 @@ export const onRender = async ({ fragment, result }) => {
 
   console.log(result);
 
-  fragment.querySelector('.modal').appendChild(tpl);
+  const modal = fragment.querySelector('.modal');
+  modal.appendChild(tpl);
+
+  window.requestAnimationFrame(() => {
+    modal.classList.add('visible');
+  });
 };
 
 export const fragment = () => {
