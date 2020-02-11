@@ -31,9 +31,8 @@ export const onRender = async ({ fragment: route, result }) => {
 
 export const fragment = () => {
   const fragment = parseFragmentFromString(`
-    <div class="posts">
-      <h2 class="title">Posts</h2>
-    </div>
+    <h2 class="title">Posts</h2>
+    <div class="posts"></div>
   `);
 
   return fragment;

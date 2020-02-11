@@ -5,7 +5,7 @@ const routes = [
   { path: '/home', ...home },
   { path: '/profile', ...profile },
   { path: '/posts', ...posts },
-  { path: '/posts/:id', ...post, modifyExisting: true },
+  { path: '/posts/:id', ...post },
   {
     path: '/settings',
     ...settings,

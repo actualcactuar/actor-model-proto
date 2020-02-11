@@ -1,5 +1,5 @@
 export const parseFragmentFromString = html =>
-  document.createRange().createContextualFragment(html);
+  document.createRange().createContextualFragment(html || '');
 
 export const useTemplateAsFragment = selector => {
   const template = document.getElementById(selector);
