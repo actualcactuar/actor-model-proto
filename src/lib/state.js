@@ -12,3 +12,11 @@ export const useState = initialValue => {
 
   return [setter, subscribe, unsubscribe];
 };
+
+function renderTemplateString(arr, args) {
+  console.log({ arr, args });
+}
+
+renderTemplateString`
+  <button onclick="${() => console.log('foo')}">click</button>
+`;
